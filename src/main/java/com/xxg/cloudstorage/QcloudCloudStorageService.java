@@ -2,6 +2,7 @@ package com.xxg.cloudstorage;
 
 import com.qcloud.cos.COSClient;
 import com.qcloud.cos.request.UploadFileRequest;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.InputStream;
@@ -47,7 +48,10 @@ public class QcloudCloudStorageService implements CloudStorageService {
     public void upload(File file, String path) throws Exception {
         COSClient cosClient = new COSClient(appId, secretId, secretKey);
         UploadFileRequest uploadFileRequest = new UploadFileRequest(bucket, path, file.getPath());
-        String uploadFileRet = cosClient.uploadFile(uploadFileRequest);
-        System.out.println(uploadFileRet);
+        String response = cosClient.uploadFile(uploadFileRequest);
+        JSONObject jsonObject = new JSONObject(response);
+        if(jsonObject.getInt("code") != 0) {
+            throw new RuntimeException("上传文件异常: " + jsonObject.getString("message"));
+        }
     }
 }

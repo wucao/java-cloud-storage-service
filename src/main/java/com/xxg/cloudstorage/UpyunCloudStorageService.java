@@ -17,6 +17,18 @@ public class UpyunCloudStorageService implements CloudStorageService {
     private String username;
     private String password;
 
+    public void setBucket(String bucket) {
+        this.bucket = bucket;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     @Override
     public void upload(byte[] data, String path) throws Exception {
         UpYun upyun = new UpYun(bucket, username, password);
