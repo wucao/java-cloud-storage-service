@@ -46,6 +46,9 @@ public class QcloudCloudStorageService implements CloudStorageService {
 
     @Override
     public void upload(File file, String path) throws Exception {
+        if(!path.startsWith("/")) {
+            path = "/" + path;
+        }
         COSClient cosClient = new COSClient(appId, secretId, secretKey);
         UploadFileRequest uploadFileRequest = new UploadFileRequest(bucket, path, file.getPath());
         String response = cosClient.uploadFile(uploadFileRequest);

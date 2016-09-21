@@ -41,6 +41,9 @@ public class AliyunCloudStorageService implements CloudStorageService {
 
     @Override
     public void upload(InputStream inputStream, String path) throws Exception {
+        if(path.startsWith("/")) {
+            path = path.substring(1);
+        }
         OSSClient client = new OSSClient(endpoint, accessKeyId, accessKeySecret);
         try {
             client.putObject(bucket, path, inputStream);
