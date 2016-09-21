@@ -114,3 +114,33 @@ System.out.println("文件HTTP地址: " + httpBase + target);
     <property name="bucket" value="<your bucket>" />
 </bean>
 ```
+
+## 不重复文件名上传工具
+
+该工具通过UUID生成唯一不重复的文件名，上传文件成功时返回对应的HTTP地址。
+
+### 文件上传代码
+```
+XxxCloudStorageService cloudStorageService = new XxxCloudStorageService();
+...
+
+UniqueFileUploader uniqueFileUploader = new UniqueFileUploader();
+uniqueFileUploader.setCloudStorageService(cloudStorageService);
+uniqueFileUploader.setHttpBase("http://wyuca.b0.upaiyun.com");
+String httpUrl1 = uniqueFileUploader.upload(new File("/Users/wucao/Desktop/test.png"), "png");
+String httpUrl2 = uniqueFileUploader.upload(new FileInputStream("/Users/wucao/Desktop/test.png"), "png");
+System.out.println(httpUrl1);
+System.out.println(httpUrl2);
+```
+
+### 使用Spring
+```
+<bean id="cloudStorageService" class="com.xxg.cloudstorage.XxxCloudStorageService">
+    ...
+</bean>
+
+<bean class="com.xxg.cloudstorage.UniqueFileUploader">
+    <property name="cloudStorageService" ref="cloudStorageService" />
+    <property name="httpBase" value="http://xxg-10066313.cos.myqcloud.com/" />
+</bean>
+```
