@@ -92,7 +92,7 @@ https://www.qcloud.com/doc/product/430/5944
 ### 文件上传代码
 ```
 String httpBase = "http://xxg-10066313.cos.myqcloud.com"; // 云存储HTTP地址
-String target = "/your/path/test.png"; // 上传到云存储的目标路径, 腾讯云必须是'/'开头
+String target = "/your/path/test.png"; // 上传到云存储的目标路径
 String filePath = "/Users/wucao/Desktop/test.png"; // 本地文件
 
 QcloudCloudStorageService cloudStorageService = new QcloudCloudStorageService();
