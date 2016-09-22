@@ -1,6 +1,58 @@
 # java-cloud-storage-service
 七牛云、又拍云、阿里云对象存储OSS、腾讯云对象存储服务COS，Java文件上传客户端。
 
+## Maven依赖使用方式
+首先加入java-cloud-storage-service依赖包:
+```
+<repositories>
+    <repository>
+        <id>xxg-repository</id>
+        <url>http://repo.maven.xxgblog.com/</url>
+    </repository>
+</repositories>
+```
+```
+<dependency>
+    <groupId>com.xxg</groupId>
+    <artifactId>cloudstorage</artifactId>
+    <version>1.0.0</version>
+</dependency>
+```
+再根据实际所使用的云存储提供商加入对应的依赖:
+
+七牛:
+```
+<dependency>
+    <groupId>com.qiniu</groupId>
+    <artifactId>qiniu-java-sdk</artifactId>
+    <version>[7.0.0, 7.0.99]</version>
+</dependency>
+```
+阿里云对象存储OSS:
+```
+<dependency>
+    <groupId>com.aliyun.oss</groupId>
+    <artifactId>aliyun-sdk-oss</artifactId>
+    <version>2.3.0</version>
+</dependency>
+```
+又拍云:
+```
+<dependency>
+    <groupId>com.upyun</groupId>
+    <artifactId>java-sdk</artifactId>
+    <version>3.10</version>
+</dependency>
+```
+腾讯云对象存储服务COS:
+```
+<dependency>
+    <groupId>com.qcloud</groupId>
+    <artifactId>cos_api</artifactId>
+    <version>3.3</version>
+</dependency>
+```
+
 ## 七牛云
 ### 文档
 http://developer.qiniu.com/code/v7/sdk/java.html
