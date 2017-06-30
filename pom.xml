@@ -5,7 +5,7 @@
 
 	<groupId>com.xxg</groupId>
 	<artifactId>cloudstorage</artifactId>
-	<version>1.0.0</version>
+	<version>1.2.2</version>
 
 	<packaging>jar</packaging>
 
@@ -13,7 +13,21 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
+	<distributionManagement>
+		<repository>
+			<id>ftp-repository</id>
+			<url>ftp://v0.ftp.upyun.com</url>
+		</repository>
+	</distributionManagement>
+
 	<build>
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ftp</artifactId>
+				<version>2.10</version>
+			</extension>
+		</extensions>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

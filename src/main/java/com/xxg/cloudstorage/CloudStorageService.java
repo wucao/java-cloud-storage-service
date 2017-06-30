@@ -35,4 +35,6 @@ public interface CloudStorageService {
      */
     void upload(File file, String path) throws Exception;
 
+    String getBaseUrl();
+
 }

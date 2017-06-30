@@ -3,6 +3,7 @@ package com.xxg.cloudstorage;
 import com.qiniu.http.Response;
 import com.qiniu.storage.UploadManager;
 import com.qiniu.util.Auth;
+import com.xxg.cloudstorage.config.QiniuConfig;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
@@ -15,27 +16,17 @@ import java.io.InputStream;
  */
 public class QiniuCloudStorageService implements CloudStorageService {
 
-    private String accessKey;
-    private String secretKey;
-    private String bucket;
+    private QiniuConfig qiniuConfig;
 
-    public void setAccessKey(String accessKey) {
-        this.accessKey = accessKey;
-    }
-
-    public void setSecretKey(String secretKey) {
-        this.secretKey = secretKey;
-    }
-
-    public void setBucket(String bucket) {
-        this.bucket = bucket;
+    public void setQiniuConfig(QiniuConfig qiniuConfig) {
+        this.qiniuConfig = qiniuConfig;
     }
 
     @Override
     public void upload(byte[] data, String path) throws Exception {
-        Auth auth = Auth.create(accessKey, secretKey);
+        Auth auth = Auth.create(qiniuConfig.getAccessKey(), qiniuConfig.getSecretKey());
         UploadManager uploadManager = new UploadManager();
-        Response res = uploadManager.put(data, path, auth.uploadToken(bucket));
+        Response res = uploadManager.put(data, path, auth.uploadToken(qiniuConfig.getBucket()));
         if (!res.isOK()) {
             throw new RuntimeException("上传七牛出错：" + res.toString());
         }
@@ -49,5 +40,10 @@ public class QiniuCloudStorageService implements CloudStorageService {
     @Override
     public void upload(File file, String path) throws Exception {
         upload(FileUtils.readFileToByteArray(file), path);
+    }
+
+    @Override
+    public String getBaseUrl() {
+        return qiniuConfig.getHttpBase();
     }
 }

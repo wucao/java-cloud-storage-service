@@ -15,7 +15,7 @@
 <dependency>
     <groupId>com.xxg</groupId>
     <artifactId>cloudstorage</artifactId>
-    <version>1.0.0</version>
+    <version>1.2.2</version>
 </dependency>
 ```
 再根据实际所使用的云存储提供商加入对应的依赖:
@@ -63,20 +63,25 @@ String httpBase = "http://o8sw7lrki.bkt.clouddn.com/"; // 云存储HTTP地址
 String target = "your/path/test.png"; // 上传到云存储的目标路径
 String filePath = "/Users/wucao/Desktop/test.png"; // 本地文件
 
+QiniuConfig qiniuConfig = new QiniuConfig();
+qiniuConfig.setAccessKey("<your accessKey>");
+qiniuConfig.setSecretKey("<your secretKey>");
+qiniuConfig.setBucket("<your bucket>");
 QiniuCloudStorageService cloudStorageService = new QiniuCloudStorageService();
-cloudStorageService.setAccessKey("<your accessKey>");
-cloudStorageService.setSecretKey("<your secretKey>");
-cloudStorageService.setBucket("<your bucket>");
+cloudStorageService.setQiniuConfig(qiniuConfig);
 
 cloudStorageService.upload(new File(filePath), target);
 System.out.println("文件HTTP地址: " + httpBase + target);
 ```
 ### 使用Spring
 ```
-<bean class="com.xxg.cloudstorage.QiniuCloudStorageService">
+<bean id="qiniuConfig" class="com.xxg.cloudstorage.config.QiniuConfig">
     <property name="accessKey" value="<your accessKey>" />
     <property name="secretKey" value="<your secretKey>" />
     <property name="bucket" value="<your bucket>" />
+</bean>
+<bean class="com.xxg.cloudstorage.QiniuCloudStorageService">
+    <property name="qiniuConfig" ref="qiniuConfig" />
 </bean>
 ```
 
@@ -85,114 +90,36 @@ System.out.println("文件HTTP地址: " + httpBase + target);
 https://help.aliyun.com/document_detail/32008.html?spm=5176.doc32008.3.3.3YkvaP
 
 ### 文件上传代码
-```
-String httpBase = "http://vsgames.oss-cn-beijing.aliyuncs.com/"; // 云存储HTTP地址
-String target = "your/path/test.png"; // 上传到云存储的目标路径
-String filePath = "/Users/wucao/Desktop/test.png"; // 本地文件
-
-AliyunCloudStorageService cloudStorageService = new AliyunCloudStorageService();
-cloudStorageService.setEndpoint("<your endpoint>"); // 根据文档配置: https://help.aliyun.com/document_detail/32010.html?spm=5176.doc32010.6.304.uVKI6q
-cloudStorageService.setAccessKeyId("<your endpoint>");
-cloudStorageService.setAccessKeySecret("<your accessKeySecret>");
-cloudStorageService.setBucket("<your bucket>");
-
-cloudStorageService.upload(new File(filePath), target);
-System.out.println("文件HTTP地址: " + httpBase + target);
-```
+待补充
 ### 使用Spring
-```
-<bean class="com.xxg.cloudstorage.AliyunCloudStorageService">
-    <property name="endpoint" value="<your endpoint>" />
-    <property name="accessKeyId" value="<your endpoint>" />
-    <property name="accessKeySecret" value="<your accessKeySecret>" />
-    <property name="bucket" value="<your bucket>" />
-</bean>
-```
+待补充
 
 ## 又拍云
 ### 文档
 https://github.com/upyun/java-sdk
 
 ### 文件上传代码
-```
-String httpBase = "http://wyuca.b0.upaiyun.com/"; // 云存储HTTP地址
-String target = "your/path/test.png"; // 上传到云存储的目标路径
-String filePath = "/Users/wucao/Desktop/test.png"; // 本地文件
-
-UpyunCloudStorageService cloudStorageService = new UpyunCloudStorageService();
-cloudStorageService.setUsername("<操作员用户名>");
-cloudStorageService.setPassword("<操作员密码>");
-cloudStorageService.setBucket("<your bucket>");
-
-cloudStorageService.upload(new File(filePath), target);
-System.out.println("文件HTTP地址: " + httpBase + target);
-```
+待补充
 
 ### 使用Spring
-```
-<bean class="com.xxg.cloudstorage.UpyunCloudStorageService">
-    <property name="username" value="<操作员用户名>" />
-    <property name="password" value="<操作员密码>" />
-    <property name="bucket" value="<your bucket>" />
-</bean>
-```
+待补充
 
 ## 腾讯云对象存储服务COS
 ### 文档
 https://www.qcloud.com/doc/product/430/5944
 
 ### 文件上传代码
-```
-String httpBase = "http://xxg-10066313.cos.myqcloud.com"; // 云存储HTTP地址
-String target = "/your/path/test.png"; // 上传到云存储的目标路径
-String filePath = "/Users/wucao/Desktop/test.png"; // 本地文件
-
-QcloudCloudStorageService cloudStorageService = new QcloudCloudStorageService();
-cloudStorageService.setAppId(<your appId>);
-cloudStorageService.setSecretId("<your secretId>");
-cloudStorageService.setSecretKey("<your secretKey>");
-cloudStorageService.setBucket("<your bucket>");
-
-cloudStorageService.upload(new File(filePath), target);
-System.out.println("文件HTTP地址: " + httpBase + target);
-```
+待补充
 
 ### 使用Spring
-```
-<bean class="com.xxg.cloudstorage.QcloudCloudStorageService">
-    <property name="appId" value="<your appId>" />
-    <property name="secretId" value="<your secretId>" />
-    <property name="secretKey" value="<your secretKey>" />
-    <property name="bucket" value="<your bucket>" />
-</bean>
-```
+待补充
 
 ## 不重复文件名上传工具
 
 该工具通过UUID生成唯一不重复的文件名，上传文件成功时返回对应的HTTP地址。
 
 ### 文件上传代码
-```
-XxxCloudStorageService cloudStorageService = new XxxCloudStorageService();
-...
-
-UniqueFileUploader uniqueFileUploader = new UniqueFileUploader();
-uniqueFileUploader.setCloudStorageService(cloudStorageService);
-uniqueFileUploader.setHttpBase("http://wyuca.b0.upaiyun.com");
-String httpUrl1 = uniqueFileUploader.upload(new File("/Users/wucao/Desktop/test.png"), "png");
-String httpUrl2 = uniqueFileUploader.upload(new FileInputStream("/Users/wucao/Desktop/test.png"), "png");
-System.out.println(httpUrl1);
-System.out.println(httpUrl2);
-```
+待补充
 
 ### 使用Spring
-```
-<bean id="cloudStorageService" class="com.xxg.cloudstorage.XxxCloudStorageService">
-    ...
-</bean>
-
-<bean class="com.xxg.cloudstorage.UniqueFileUploader">
-    <property name="cloudStorageService" ref="cloudStorageService" />
-    <property name="httpBase" value="http://xxg-10066313.cos.myqcloud.com/" />
-</bean>
-```
+待补充

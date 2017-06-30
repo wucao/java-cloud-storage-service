@@ -1,5 +1,6 @@
 package com.xxg.cloudstorage;
 
+import com.xxg.cloudstorage.config.UpyunConfig;
 import main.java.com.UpYun;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -13,25 +14,15 @@ import java.io.InputStream;
  */
 public class UpyunCloudStorageService implements CloudStorageService {
 
-    private String bucket;
-    private String username;
-    private String password;
+    private UpyunConfig upyunConfig;
 
-    public void setBucket(String bucket) {
-        this.bucket = bucket;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    public void setUpyunConfig(UpyunConfig upyunConfig) {
+        this.upyunConfig = upyunConfig;
     }
 
     @Override
     public void upload(byte[] data, String path) throws Exception {
-        UpYun upyun = new UpYun(bucket, username, password);
+        UpYun upyun = new UpYun(upyunConfig.getBucket(), upyunConfig.getUsername(), upyunConfig.getPassword());
         boolean success = upyun.writeFile(path, data, true);
         if(!success) {
             throw new RuntimeException("上传又拍云出错");
@@ -46,5 +37,10 @@ public class UpyunCloudStorageService implements CloudStorageService {
     @Override
     public void upload(File file, String path) throws Exception {
         upload(FileUtils.readFileToByteArray(file), path);
+    }
+
+    @Override
+    public String getBaseUrl() {
+        return upyunConfig.getHttpBase();
     }
 }

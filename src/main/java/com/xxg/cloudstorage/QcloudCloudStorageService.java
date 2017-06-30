@@ -2,6 +2,7 @@ package com.xxg.cloudstorage;
 
 import com.qcloud.cos.COSClient;
 import com.qcloud.cos.request.UploadFileRequest;
+import com.xxg.cloudstorage.config.QcloudConfig;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -13,25 +14,10 @@ import java.io.InputStream;
  */
 public class QcloudCloudStorageService implements CloudStorageService {
 
-    private int appId;
-    private String secretId;
-    private String secretKey;
-    private String bucket;
+    private QcloudConfig qcloudConfig;
 
-    public void setAppId(int appId) {
-        this.appId = appId;
-    }
-
-    public void setSecretId(String secretId) {
-        this.secretId = secretId;
-    }
-
-    public void setSecretKey(String secretKey) {
-        this.secretKey = secretKey;
-    }
-
-    public void setBucket(String bucket) {
-        this.bucket = bucket;
+    public void setQcloudConfig(QcloudConfig qcloudConfig) {
+        this.qcloudConfig = qcloudConfig;
     }
 
     @Override
@@ -49,12 +35,17 @@ public class QcloudCloudStorageService implements CloudStorageService {
         if(!path.startsWith("/")) {
             path = "/" + path;
         }
-        COSClient cosClient = new COSClient(appId, secretId, secretKey);
-        UploadFileRequest uploadFileRequest = new UploadFileRequest(bucket, path, file.getPath());
+        COSClient cosClient = new COSClient(qcloudConfig.getAppId(), qcloudConfig.getSecretId(), qcloudConfig.getSecretKey());
+        UploadFileRequest uploadFileRequest = new UploadFileRequest(qcloudConfig.getBucket(), path, file.getPath());
         String response = cosClient.uploadFile(uploadFileRequest);
         JSONObject jsonObject = new JSONObject(response);
         if(jsonObject.getInt("code") != 0) {
             throw new RuntimeException("上传文件异常: " + jsonObject.getString("message"));
         }
+    }
+
+    @Override
+    public String getBaseUrl() {
+        return qcloudConfig.getHttpBase();
     }
 }

@@ -1,6 +1,7 @@
 package com.xxg.cloudstorage;
 
 import com.aliyun.oss.OSSClient;
+import com.xxg.cloudstorage.config.AliyunConfig;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -13,25 +14,10 @@ import java.io.InputStream;
  */
 public class AliyunCloudStorageService implements CloudStorageService {
 
-    private String endpoint;
-    private String accessKeyId;
-    private String accessKeySecret;
-    private String bucket;
+    private AliyunConfig aliyunConfig;
 
-    public void setEndpoint(String endpoint) {
-        this.endpoint = endpoint;
-    }
-
-    public void setAccessKeyId(String accessKeyId) {
-        this.accessKeyId = accessKeyId;
-    }
-
-    public void setAccessKeySecret(String accessKeySecret) {
-        this.accessKeySecret = accessKeySecret;
-    }
-
-    public void setBucket(String bucket) {
-        this.bucket = bucket;
+    public void setAliyunConfig(AliyunConfig aliyunConfig) {
+        this.aliyunConfig = aliyunConfig;
     }
 
     @Override
@@ -44,9 +30,9 @@ public class AliyunCloudStorageService implements CloudStorageService {
         if(path.startsWith("/")) {
             path = path.substring(1);
         }
-        OSSClient client = new OSSClient(endpoint, accessKeyId, accessKeySecret);
+        OSSClient client = new OSSClient(aliyunConfig.getEndpoint(), aliyunConfig.getAccessKeyId(), aliyunConfig.getAccessKeySecret());
         try {
-            client.putObject(bucket, path, inputStream);
+            client.putObject(aliyunConfig.getBucket(), path, inputStream);
         } finally {
             client.shutdown();
         }
@@ -55,5 +41,10 @@ public class AliyunCloudStorageService implements CloudStorageService {
     @Override
     public void upload(File file, String path) throws Exception {
         upload(new FileInputStream(file), path);
+    }
+
+    @Override
+    public String getBaseUrl() {
+        return aliyunConfig.getHttpBase();
     }
 }

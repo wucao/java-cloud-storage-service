@@ -10,14 +10,17 @@ import java.util.UUID;
 public class UniqueFileUploader {
 
     private CloudStorageService cloudStorageService;
-    private String httpBase;
 
     public void setCloudStorageService(CloudStorageService cloudStorageService) {
         this.cloudStorageService = cloudStorageService;
     }
 
-    public void setHttpBase(String httpBase) {
-        this.httpBase = httpBase;
+    public String getFormattedBaseUrl() {
+        String httpBase = cloudStorageService.getBaseUrl();
+        if(!httpBase.endsWith("/")) {
+            httpBase += "/";
+        }
+        return httpBase;
     }
 
     /**
@@ -30,9 +33,7 @@ public class UniqueFileUploader {
     public String upload(byte[] data, String format) throws Exception {
         String uuid = UUID.randomUUID().toString();
         String target = uuid + "." + format;
-        if(!httpBase.endsWith("/")) {
-            httpBase += "/";
-        }
+        String httpBase = getFormattedBaseUrl();
         cloudStorageService.upload(data, target);
         return httpBase + target;
     }
@@ -47,9 +48,7 @@ public class UniqueFileUploader {
     public String upload(InputStream inputStream, String format) throws Exception {
         String uuid = UUID.randomUUID().toString();
         String target = uuid + "." + format;
-        if(!httpBase.endsWith("/")) {
-            httpBase += "/";
-        }
+        String httpBase = getFormattedBaseUrl();
         cloudStorageService.upload(inputStream, target);
         return httpBase + target;
     }
@@ -64,9 +63,7 @@ public class UniqueFileUploader {
     public String upload(File file, String format) throws Exception {
         String uuid = UUID.randomUUID().toString();
         String target = uuid + "." + format;
-        if(!httpBase.endsWith("/")) {
-            httpBase += "/";
-        }
+        String httpBase = getFormattedBaseUrl();
         cloudStorageService.upload(file, target);
         return httpBase + target;
     }
